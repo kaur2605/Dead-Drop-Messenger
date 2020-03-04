@@ -64,7 +64,7 @@ public class IOLocal {
     }
 
     static void storeMessage(String outputFile, ObservableList<CharSequence> paragraph) throws IOException {
-        //Iterator<CharSequence> iter = paragraph.iterator();
+        //need to join charsequence list with newlines in between
         byte[] textArea = String.join("\n", paragraph).getBytes();
 
         // hashing
@@ -85,28 +85,7 @@ public class IOLocal {
 
         String outTextArea = outputFile + "." + "txt";
 
-        String txt = String.join("\n", paragraph);
-       // String txt = new String(textArea);
-        System.out.println("built str txt: " + txt);
-      //  StringBuilder sb = new StringBuilder();
-      //  for (byte[] bytes : Arrays.asList(textArea)) {
-      //      sb.append(bytes);
-      //  }
-      //  System.out.println(sb.toString());
-        FileUtils.write(outTextArea, txt.getBytes());
-
-
-       // BufferedWriter bf = new BufferedWriter(new FileWriter(new File(outputFile + "." + "txt")));
-      //  while (iter.hasNext()) {
-        //    CharSequence seq = iter.next();
-        //    System.out.println(seq);
-         //   bf.append(seq);
-          //  bf.newLine();
-
-       // }
-
-       // bf.flush();
-       // bf.close();
+        FileUtils.write(outTextArea, textArea);
 
     }
 }
