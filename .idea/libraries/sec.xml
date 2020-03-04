@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="sec">
+    <CLASSES>
+      <root url="file://Z:/java/sec" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://Z:/java/sec" recursive="false" />
+  </library>
+</component>
