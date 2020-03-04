@@ -16,6 +16,9 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Window;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
 
 public class View {
     private static GridPane gridPane;
@@ -98,19 +101,19 @@ public class View {
         // Add Submit Button
         Button loginButton = new Button("Login");
         loginButton.setPrefHeight(40);
-        loginButton.setDefaultButton(true);
+        //loginButton.setDefaultButton(true);
         loginButton.setPrefWidth(100);
-        gridPane.add(loginButton, 0, 4, 2, 1);
-        GridPane.setHalignment(loginButton, HPos.CENTER);
+        gridPane.add(loginButton, 1, 4, 2, 1);
+        //GridPane.setHalignment(loginButton, HPos.CENTER);
         GridPane.setMargin(loginButton, new Insets(20, 0, 20, 0));
 
-        // Add Submit Button
+        // Add new account Button
         Button createNewAccountButton = new Button("Create New");
         createNewAccountButton.setPrefHeight(40);
-        createNewAccountButton.setDefaultButton(true);
+        //createNewAccountButton.setDefaultButton(true);
         createNewAccountButton.setPrefWidth(100);
-        gridPane.add(createNewAccountButton, 2, 4, 2, 1);
-        GridPane.setHalignment(createNewAccountButton, HPos.CENTER);
+        gridPane.add(createNewAccountButton, 0, 4, 2, 1);
+        //GridPane.setHalignment(createNewAccountButton, HPos.CENTER);
         GridPane.setMargin(createNewAccountButton, new Insets(20, 0, 20, 0));
 
         createNewAccountButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -126,6 +129,16 @@ public class View {
                 }
 
                 // showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Account created", "Welcome " + nameField.getText());
+
+                String name = nameField.getText();
+                String pass = passwordField.getText();
+                try {
+                    IOLocal.storeAccount(name,pass);
+                       } catch (InvalidKeySpecException e) {
+                    e.printStackTrace();
+                }
+
+
                 gridPane.getChildren().clear();
                 messageSceneElements(gridPane);
 
@@ -172,19 +185,19 @@ public class View {
         // Add Submit Button
         Button retrieveButton = new Button("Retrieve");
         retrieveButton.setPrefHeight(40);
-        retrieveButton.setDefaultButton(true);
+       // retrieveButton.setDefaultButton(true);
         retrieveButton.setPrefWidth(100);
         gridPane.add(retrieveButton, 0, 4, 2, 1);
-        GridPane.setHalignment(retrieveButton, HPos.CENTER);
+        //GridPane.setHalignment(retrieveButton, HPos.CENTER);
         GridPane.setMargin(retrieveButton, new Insets(20, 0, 20, 0));
 
         // Add Submit Button
         Button storeButton = new Button("Store");
         storeButton.setPrefHeight(40);
-        storeButton.setDefaultButton(true);
+        //storeButton.setDefaultButton(true);
         storeButton.setPrefWidth(100);
-        gridPane.add(storeButton, 2, 4, 2, 1);
-        GridPane.setHalignment(storeButton, HPos.CENTER);
+        gridPane.add(storeButton, 1, 4, 2, 1);
+        //GridPane.setHalignment(storeButton, HPos.CENTER);
         GridPane.setMargin(storeButton, new Insets(20, 0, 20, 0));
 
         storeButton.setOnAction(new EventHandler<ActionEvent>() {
