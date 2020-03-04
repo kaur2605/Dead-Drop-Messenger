@@ -3,19 +3,10 @@ package sample;
 import javafx.collections.ObservableList;
 import org.bouncycastle.util.encoders.Hex;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class IOLocal {
 
@@ -24,9 +15,7 @@ public class IOLocal {
         byte[] inputBytes = new byte[0];
         try {
 // reading medical record + stored hash
-            System.out.println("Verifying hash of medical record..");
-            //  String inFile = "MedicalRecordNielsJ.pdf";
-// String inFile = "TamperedMedicalRecord.pdf";
+            System.out.println("Verifying hash of stored message..");
             inputBytes = FileUtils.readAllBytes(inputFile + ".txt");
             byte[] storedHashValue =
                     FileUtils.readAllBytes(inputFile + ".sha256");
@@ -58,7 +47,7 @@ public class IOLocal {
         }
 
         String txt = new String(inputBytes);
-        System.out.println("built str txt: " + txt);
+        //System.out.println("built str txt: " + txt);
         return txt;
 
     }

@@ -18,24 +18,24 @@ import javafx.stage.Window;
 import java.io.IOException;
 
 public class View {
-    private static GridPane gridPane ;
+    private static GridPane gridPane;
     private static TextArea messField = new TextArea();
 
-    private Controller controller ;
-    private Model model ;
+    private Controller controller;
+    private Model model;
 
     public View(Controller controller, Model model) {
 
-        this.controller = controller ;
-        this.model = model ;
+        this.controller = controller;
+        this.model = model;
 
         GridPane gridPane = createDefaultFormPane();
 
-       loginSceneElements(gridPane);
+        loginSceneElements(gridPane);
     }
 
     public Parent asParent() {
-        return gridPane ;
+        return gridPane;
     }
 
     public static GridPane createDefaultFormPane() {
@@ -68,6 +68,7 @@ public class View {
 
         return gridPane;
     }
+
     public static void loginSceneElements(GridPane gridPane) {
         // Add Header
         Label headerLabel = new Label("Login or Create new account");
@@ -124,7 +125,7 @@ public class View {
                     return;
                 }
 
-               // showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Account created", "Welcome " + nameField.getText());
+                // showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Account created", "Welcome " + nameField.getText());
                 gridPane.getChildren().clear();
                 messageSceneElements(gridPane);
 
@@ -148,9 +149,8 @@ public class View {
                 messageSceneElements(gridPane);
             }
         });
-
-
     }
+
     public static void messageSceneElements(GridPane gridPane) {
         // Add Header
         Label headerLabel = new Label("Message");
@@ -166,8 +166,8 @@ public class View {
         // Add Name Text Field
 
         messField.setPrefHeight(200);
+        messField.setWrapText(true);
         gridPane.add(messField, 1, 1);
-
 
         // Add Submit Button
         Button retrieveButton = new Button("Retrieve");
@@ -195,7 +195,6 @@ public class View {
                     return;
                 }
 
-
                 ObservableList<CharSequence> paragraph = messField.getParagraphs();
                 try {
                     IOLocal.storeMessage("textArea", paragraph);
@@ -210,10 +209,6 @@ public class View {
         retrieveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // if(nameField.getText().isEmpty()) {
-                //   showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!", "Please enter your name");
-                // return;
-                //}
                 try {
                     messField.setText(IOLocal.retrieveMessage("textArea"));
                 } catch (IOException exc) {
@@ -222,10 +217,7 @@ public class View {
                 // showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "retrieve", "retrieved");
             }
         });
-
-
     }
-
 
     public static void showAlert(Alert.AlertType alertType, Window owner, String title, String message) {
         Alert alert = new Alert(alertType);
@@ -235,6 +227,5 @@ public class View {
         alert.initOwner(owner);
         alert.show();
     }
-
 
 }
