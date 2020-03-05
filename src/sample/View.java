@@ -154,10 +154,11 @@ public class View {
                     return;
                 }
 
-                ioLocalController.retrieveAccount();
-                //showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Login", "Welcome " + nameField.getText());
-                gridPane.getChildren().clear();
-                messageSceneElements(gridPane);
+                if (ioLocalController.retrieveAccount()) {
+                    //showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Login", "Welcome " + nameField.getText());
+                    gridPane.getChildren().clear();
+                    messageSceneElements(gridPane);
+                }
             }
         });
     }
