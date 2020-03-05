@@ -11,6 +11,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Model model = new Model();
         Controller controller = new Controller(model);
+        IOLocalController ioLocalController = new IOLocalController(model);
         View view = new View(controller, model);
 
         primaryStage.setTitle("Startup Screen");
