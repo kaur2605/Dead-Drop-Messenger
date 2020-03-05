@@ -10,11 +10,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.bouncycastle.util.encoders.Hex;
 
+import javax.crypto.SecretKey;
+
 public class Model {
     private ObservableList<CharSequence> message = FXCollections.observableArrayList();
     private StringProperty name = new SimpleStringProperty();
     private StringProperty pass = new SimpleStringProperty();
-
+    private SecretKey passSecretKey = null;
+    private SecretKey nameSecretKey = null;
+    private byte[] passSalt = null;
+    private byte[] nameSalt = null;
 
 
     public final StringProperty nameProperty() {
@@ -40,8 +45,14 @@ public class Model {
     }
 
 
+
+
     public final ObservableList<CharSequence> getMessage() {
         return this.message;
+    }
+
+    public final void setMessage(ObservableList<CharSequence> msg) {
+        this.message=msg;
     }
 
     public final byte[] getMessageBytes() {

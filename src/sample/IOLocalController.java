@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 
 public class IOLocalController {
     private static Model model;
@@ -90,6 +91,68 @@ public class IOLocalController {
 
     static void retrieveAccount() {
         //to do
+        char[] nameBytes = model.getName().toCharArray();
+        char[] passBytes = model.getPass().toCharArray();
+
+        String stringNameHashCalculated = null;
+        String stringPassHashCalculated = null;
+
+        String stringNameHashRetrieved = null;
+        String stringPassHashRetrieved = null;
+        String stringPassSaltRetrieved = null;
+        String stringNameSaltRetrieved = null;
+        byte[] passSaltRetrieved = null;
+        byte[] nameSaltRetrieved = null;
+
+        String currentDirectory = System.getProperty("user.dir");
+        String[] files;
+        files = FileUtils.getAllFileNames(currentDirectory,"acc");
+        System.out.println(Arrays.toString(files));
+
+        for (String filename: files
+             ) {
+            String name = filename.substring(0, filename.lastIndexOf('.'));
+            stringNameHashRetrieved = name;
+            byte[] fileBytes = FileUtils.readAllBytes(name + ".acc");
+            String fileString = new String(fileBytes);
+            System.out.println(fileString);
+            String[] fileContents = fileString.split(",");
+            stringPassSaltRetrieved = fileContents[0];
+            stringNameSaltRetrieved = fileContents[1];
+            stringPassHashRetrieved = fileContents[2];
+
+            passSaltRetrieved = Hex.decode(stringPassSaltRetrieved);
+            nameSaltRetrieved = Hex.decode(stringNameSaltRetrieved);
+
+
+           // System.out.println(stringPassSaltRetrieved);
+          //  System.out.println(stringNameSaltRetrieved);
+          //  System.out.println(stringPassHashRetrieved);
+
+            stringNameHashCalculated = Base64.toBase64String(getPBKDHashKey(nameBytes, nameSaltRetrieved).getEncoded());
+            stringPassHashCalculated = Base64.toBase64String(getPBKDHashKey(passBytes, passSaltRetrieved).getEncoded());
+
+            System.out.println("name hash ret  " + stringNameHashRetrieved);
+            System.out.println("name hash calc " + Hex.toHexString(stringNameHashCalculated.getBytes()));
+
+            System.out.println("pass hash ret  " + stringPassHashRetrieved);
+            System.out.println("pass hash calc " + Hex.toHexString(stringPassHashCalculated.getBytes()));
+
+            if (MessageDigest
+                    .isEqual(Hex.toHexString(stringNameHashCalculated.getBytes()).getBytes(),
+                            stringNameHashRetrieved.getBytes())) {
+                System.out.println("nam hash equal");
+            } else System.out.println("nam hash not equal");
+
+            if (MessageDigest
+                    .isEqual(Hex.toHexString(stringPassHashCalculated.getBytes()).getBytes(),
+                            stringPassHashRetrieved.getBytes())) {
+                System.out.println("pass hash equal");
+            } else System.out.println("pass hash not equal");
+
+        } 
+        
+
     }
 
     static void storeAccount() {
@@ -99,13 +162,17 @@ public class IOLocalController {
         byte[] nameSalt = null;
         String stringPassHash = null;
         String stringNameHash = null;
+        SecretKey passSecretKey = null;
+        SecretKey nameSecretKey = null;
+
         try {
             SecureRandom secureRandom = SecureRandom.getInstance("DEFAULT", "BC");
             passSalt = new byte[32];
             secureRandom.nextBytes(passSalt);
             nameSalt = new byte[32];
             secureRandom.nextBytes(nameSalt);
-            System.out.println("saltvalue: " + Hex.toHexString(passSalt));
+            System.out.println("passsaltvalue: " + Hex.toHexString(passSalt));
+            System.out.println("namesaltvalue: " + Hex.toHexString(nameSalt));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchProviderException e) {
@@ -116,14 +183,22 @@ public class IOLocalController {
 
     //hash pw, name
         if (passSalt!=null && nameSalt!=null) {
+            nameSecretKey = getPBKDHashKey(nameBytes, nameSalt);
+            stringNameHash = Base64.toBase64String(nameSecretKey.getEncoded());
+
             stringPassHash = Base64.toBase64String(getPBKDHashKey(passBytes, passSalt).getEncoded());
-            stringNameHash = Base64.toBase64String(getPBKDHashKey(nameBytes, nameSalt).getEncoded());
+
             System.out.println("passkey hashvalue: " + stringPassHash);
+            System.out.println("passkey hashvalue: " + stringNameHash);
             System.out.println("passkeyhexvalue: " + Hex.toHexString(stringPassHash.getBytes()));
         }
 
         String outFile = Hex.toHexString(stringNameHash.getBytes()) + "." + "acc";
         String outString = Hex.toHexString(passSalt) + "," + Hex.toHexString(nameSalt) + "," + Hex.toHexString(stringPassHash.getBytes());
+
+
+        //System.out.println("hex dehex: " + MessageDigest.isEqual(nameSalt, Hex.decode(Hex.toHexString(nameSalt))));
+
 
         byte[] accountData = outString.getBytes();
         FileUtils.write(outFile, accountData);
