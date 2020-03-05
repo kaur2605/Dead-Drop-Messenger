@@ -16,20 +16,22 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Window;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 
 public class View {
     private static GridPane gridPane;
     private static TextArea messField = new TextArea();
+    private static TextField nameField = new TextField();
+    private static PasswordField passwordField = new PasswordField();
 
-    private Controller controller;
+    private static Controller controller;
+    private static IOLocalController ioLocalController;
     private Model model;
 
     public View(Controller controller, Model model) {
 
         this.controller = controller;
+        this.ioLocalController = ioLocalController;
         this.model = model;
 
         GridPane gridPane = createDefaultFormPane();
@@ -85,18 +87,21 @@ public class View {
         gridPane.add(nameLabel, 0, 1);
 
         // Add Name Text Field
-        TextField nameField = new TextField();
+        //TextField nameField = new TextField();
         nameField.setPrefHeight(40);
         gridPane.add(nameField, 1, 1);
+        nameField.textProperty().addListener((obs, oldText, newText) -> controller.updateName(newText));
+
 
         // Add Password Label
         Label passwordLabel = new Label("Password : ");
         gridPane.add(passwordLabel, 0, 3);
 
         // Add Password Field
-        PasswordField passwordField = new PasswordField();
+        //PasswordField passwordField = new PasswordField();
         passwordField.setPrefHeight(40);
         gridPane.add(passwordField, 1, 3);
+        passwordField.textProperty().addListener((obs, oldText, newText) -> controller.updatePass(newText));
 
         // Add Submit Button
         Button loginButton = new Button("Login");
@@ -128,17 +133,9 @@ public class View {
                     return;
                 }
 
+                ioLocalController.storeAccount();
+
                 // showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Account created", "Welcome " + nameField.getText());
-
-                String name = nameField.getText();
-                String pass = passwordField.getText();
-                try {
-                    IOLocal.storeAccount(name,pass);
-                       } catch (InvalidKeySpecException e) {
-                    e.printStackTrace();
-                }
-
-
                 gridPane.getChildren().clear();
                 messageSceneElements(gridPane);
 
@@ -157,9 +154,11 @@ public class View {
                     return;
                 }
 
-                //showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Login", "Welcome " + nameField.getText());
-                gridPane.getChildren().clear();
-                messageSceneElements(gridPane);
+                if (ioLocalController.retrieveAccount()) {
+                    //showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Login", "Welcome " + nameField.getText());
+                    gridPane.getChildren().clear();
+                    messageSceneElements(gridPane);
+                }
             }
         });
     }
@@ -185,7 +184,7 @@ public class View {
         // Add Submit Button
         Button retrieveButton = new Button("Retrieve");
         retrieveButton.setPrefHeight(40);
-       // retrieveButton.setDefaultButton(true);
+        // retrieveButton.setDefaultButton(true);
         retrieveButton.setPrefWidth(100);
         gridPane.add(retrieveButton, 0, 4, 2, 1);
         //GridPane.setHalignment(retrieveButton, HPos.CENTER);
@@ -210,7 +209,7 @@ public class View {
 
                 ObservableList<CharSequence> paragraph = messField.getParagraphs();
                 try {
-                    IOLocal.storeMessage("textArea", paragraph);
+                    IOLocalController.storeMessage("textArea", paragraph);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -223,7 +222,7 @@ public class View {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    messField.setText(IOLocal.retrieveMessage("textArea"));
+                    messField.setText(IOLocalController.retrieveMessage("textArea"));
                 } catch (IOException exc) {
                     exc.printStackTrace();
                 }
