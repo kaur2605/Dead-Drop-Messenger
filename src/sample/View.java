@@ -214,7 +214,7 @@ public class View {
                     e.printStackTrace();
                 }
 
-                // showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "mess saved", "mess saved");
+                 showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "message saved", "message has been saved");
             }
         });
 
@@ -226,7 +226,7 @@ public class View {
                 } catch (IOException exc) {
                     exc.printStackTrace();
                 }
-                // showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "retrieve", "retrieved");
+                showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "retrieve", "Message has been retrieved");
             }
         });
     }
