@@ -135,7 +135,7 @@ public class View {
 
                 ioLocalController.storeAccount();
 
-                // showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Account created", "Welcome " + nameField.getText());
+                 showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Account created", "Welcome " + nameField.getText());
                 gridPane.getChildren().clear();
                 messageSceneElements(gridPane);
 
@@ -155,7 +155,7 @@ public class View {
                 }
 
                 if (ioLocalController.retrieveAccount()) {
-                    //showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Login", "Welcome " + nameField.getText());
+                    showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Login", "Welcome " + nameField.getText());
                     gridPane.getChildren().clear();
                     messageSceneElements(gridPane);
                 }
